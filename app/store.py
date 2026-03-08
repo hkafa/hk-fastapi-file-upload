@@ -4,7 +4,7 @@ from uuid import UUID
 
 from fastapi import HTTPException
 from schemas import FileData, FileMetadata
-
+from typing import Optional
 
 class Repo:
     # The store is indexed by UUID (file ID) rather than SHA256 hash.
@@ -19,18 +19,19 @@ class Repo:
     store: dict[UUID, FileData] = {}
 
     @staticmethod
-    def _create_payload(hash: str, content: bytes) -> FileData:
-        """Create a FileData object with a new UUID, hash, content bytes, and current datetime."""
+    def _create_payload(filename: Optional[str], hash: str, content: bytes) -> FileData:
+        """Create a FileData object with a new UUID, filename, hash, content bytes, and current datetime."""
         return FileData(
             id=uuid4(),
+            filename=filename,
             hash=hash,
             content=content,
             uploaded_at=datetime.now()
         )
 
-    def save(self, hash: str, content: bytes) -> FileMetadata:
-        """Save a file with given hash and content into the store; returns the saved FileMetadata."""
-        payload = self._create_payload(hash, content)
+    def save(self, filename: Optional[str], hash: str, content: bytes) -> FileMetadata:
+        """Save a file with given filename, hash and content into the store; returns the saved FileMetadata."""
+        payload = self._create_payload(filename, hash, content)
 
         try:
             self.store[payload.id] = payload

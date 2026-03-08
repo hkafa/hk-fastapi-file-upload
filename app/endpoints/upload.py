@@ -45,6 +45,6 @@ async def upload_file(
     except Exception as e: 
         raise HTTPException(400, f"encountered error while reading the file: {str(e)}")
     
-    entry = repo.save(state.hexdigest(), state.get_content_bytes())
+    entry = repo.save(file.filename or "unknown", state.hexdigest(), state.get_content_bytes())
     return entry
 

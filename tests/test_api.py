@@ -19,6 +19,7 @@ def test_upload_returns_metadata():
     assert response.status_code == 201
     data = response.json()
     assert "id" in data
+    assert "filename" in data
     assert "hash" in data
     assert "uploaded_at" in data
 
