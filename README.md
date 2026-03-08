@@ -38,6 +38,15 @@ The service will be available at `http://localhost:8000`.
 
 ---
 
+## Interactive API Docs
+
+FastAPI provides auto-generated documentation at:
+
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+---
+
 ## API Structure
 
 The API has three endpoints:
@@ -96,10 +105,3 @@ curl -X DELETE "http://localhost:8000/files/<id>?hash=<hash>"
 ```
 
 ---
-
-## Interactive API Docs
-
-FastAPI provides auto-generated documentation at:
-
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
