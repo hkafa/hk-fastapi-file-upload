@@ -33,7 +33,7 @@ class Repo:
         except Exception as e:
             message = f"Error when saving a file to the store: {str(e)}" 
             log.exception(message)
-            raise HTTPException(400, message)
+            raise HTTPException(status_code=400, detail=message)
 
         return payload.to_metadata()
 
@@ -48,7 +48,7 @@ class Repo:
         except KeyError:
             message = "File not found"
             log.error(message)
-            raise HTTPException(404, message)
+            raise HTTPException(status_code=404, detail=message)
 
     def delete(self, id: UUID, hash: str) -> FileMetadata:
         """Delete a file by ID, verifying the provided hash matches before deletion."""
@@ -57,7 +57,7 @@ class Repo:
         if file.hash != hash:
             message = "Provided hash does not match the file"
             log.error(message)
-            raise HTTPException(400, message)
+            raise HTTPException(status_code=400, detail=message)
 
         del self.store[id]
 

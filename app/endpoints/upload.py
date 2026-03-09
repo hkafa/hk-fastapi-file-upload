@@ -49,7 +49,7 @@ async def upload_file(
     except Exception as e: 
         message = f"encountered error while reading the file: {str(e)}"
         log.exception(message)
-        raise HTTPException(400, message)
+        raise HTTPException(status_code=400, detail=message)
     
     entry = repo.save(file.filename, state.hexdigest(), state.get_content_bytes())
     return entry

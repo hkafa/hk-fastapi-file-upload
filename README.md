@@ -32,8 +32,6 @@ docker build -t revengai .
 docker run -p 8000:8000 revengai
 ```
 
-The service will be available at `http://localhost:8000`.
-
 > **Note:** Storage is in-memory. All uploaded files are lost when the container stops.
 
 ---
@@ -90,15 +88,9 @@ curl -X POST http://localhost:8000/upload \
 curl http://localhost:8000/files
 ```
 
-### 4. Delete the text file
+### 4. Delete a file
 
 Use the `id` and `hash` from the upload response:
-
-```bash
-curl -X DELETE "http://localhost:8000/files/<id>?hash=<hash>"
-```
-
-### 5. Delete the binary file
 
 ```bash
 curl -X DELETE "http://localhost:8000/files/<id>?hash=<hash>"
