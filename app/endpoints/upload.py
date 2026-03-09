@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from schemas import FileMetadata
 from store import Repo
 import hashlib
+from logs import get_logger    
 
 router = APIRouter()
+log = get_logger()
 
 class FileUploadState:
     """Accumulates file content and computes its SHA256 hash incrementally as chunks are read."""
@@ -39,12 +41,16 @@ async def upload_file(
     The file is read in chunks to avoid loading it entirely into memory before hashing.
     Returns the file metadata (id, hash, uploaded_at) on success.
     """
+    log.info("Processing file upload")
+
     try:
         while chunk := await file.read(CHUNK_SIZE):
             state.update(chunk)
     except Exception as e: 
-        raise HTTPException(400, f"encountered error while reading the file: {str(e)}")
+        message = f"encountered error while reading the file: {str(e)}"
+        log.exception(message)
+        raise HTTPException(400, message)
     
-    entry = repo.save(file.filename or "unknown", state.hexdigest(), state.get_content_bytes())
+    entry = repo.save(file.filename, state.hexdigest(), state.get_content_bytes())
     return entry
 

@@ -14,7 +14,7 @@ A simple file upload and listing API consisting of:
 
 - **Duplicate uploads are permitted.** The store is indexed by a generated UUID (file ID), following standard database convention. Therefore, uploading the same file multiple times will produce distinct entries with different UUIDs but identical hashes
 
-- **File content is not returned by the list endpoint.** Since the supported file types are not specified, returning content was deliberately avoided for two reasons: (1) files could be very large, making a list response very expensive; (2) binary files cannot be directly serialised into JSON without encoding, which would bloat responses and require the client to decode them. The list endpoint returns metadata only (`id`, `hash`, `uploaded_at`).
+- **File content is not returned by the list endpoint.** Since the supported file types are not specified, returning content was deliberately avoided for two reasons: (1) files could be very large, making a list response very expensive; (2) binary files cannot be directly serialised into JSON without encoding, which would  require the client to decode them. The list endpoint returns metadata only (`id`, `hash`, `uploaded_at`).
 
 ---
 

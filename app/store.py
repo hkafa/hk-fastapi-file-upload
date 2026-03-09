@@ -1,19 +1,14 @@
 from datetime import datetime
 from uuid import uuid4
 from uuid import UUID
-
 from fastapi import HTTPException
+from logs import get_logger
 from schemas import FileData, FileMetadata
 from typing import Optional
 
+log = get_logger()
+
 class Repo:
-    # The store is indexed by UUID (file ID) rather than SHA256 hash.
-    # This follows standard database convention where a generated ID is the primary key.
-    # As a consequence, uploading the same file multiple times will create duplicate entries,
-    # each with a distinct ID but identical hash. Deduplication could be achieved by keying
-    # on hash instead, but that would require the hash to act as the primary identifier,
-    # which is not conventional and would make the API surface misleading.
-    #
     # The store is a class-level variable so that all Repo instances injected per request
     # share the same in-memory state for the lifetime of the application.
     store: dict[UUID, FileData] = {}
@@ -36,7 +31,9 @@ class Repo:
         try:
             self.store[payload.id] = payload
         except Exception as e:
-            raise HTTPException(400, f"Error when saving a file to the store: {str(e)}")
+            message = f"Error when saving a file to the store: {str(e)}" 
+            log.exception(message)
+            raise HTTPException(400, message)
 
         return payload.to_metadata()
 
@@ -49,19 +46,18 @@ class Repo:
         try:
             return self.store[id]
         except KeyError:
-            raise HTTPException(404, "File not found")
+            message = "File not found"
+            log.error(message)
+            raise HTTPException(404, message)
 
     def delete(self, id: UUID, hash: str) -> FileMetadata:
-        """Delete a file by ID, verifying the provided hash matches before deletion.
-
-        Both the file ID (path parameter) and SHA256 hash (query parameter) must be supplied.
-        The hash acts as a secondary confirmation — it ensures the caller is certain they are
-        deleting the intended file, guarding against accidental deletion by ID alone.
-        """
+        """Delete a file by ID, verifying the provided hash matches before deletion."""
         file = self._get_one(id)
 
         if file.hash != hash:
-            raise HTTPException(400, "Provided hash does not match the file")
+            message = "Provided hash does not match the file"
+            log.error(message)
+            raise HTTPException(400, message)
 
         del self.store[id]
 
