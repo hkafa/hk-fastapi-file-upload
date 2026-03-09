@@ -18,6 +18,20 @@ A simple file upload and listing API consisting of:
 
 ---
 
+## What I would like to improve with more time
+
+- **File type / size limits** At the moment the API accepts any file type with no limit on size of file upload. With more time (and context) I would like to add some limits around file types and sizes.
+
+- **versioning** The current endpoints URL does not include a version, and it will be better to add /v1/ to allow release improved versions of this endpoint without breaking changes to existing users.
+
+- **Pagination** The /list endpoint currently lists all file metadata in the sore with no limit on the number of returned files. I would like to improve this by adding paginations, so a user would ask for a specific page number and files count (within a predefined range).
+
+- **Rate Limit** The current design does not implement a rate limiter, and with more time I would like to add rate limiting to protect infrastructure from DoS attacks and to maintain a fair usage of the API to all users.
+
+- ****
+
+---
+
 ## Running with Docker
 
 ### Build the image
